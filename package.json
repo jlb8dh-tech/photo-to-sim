@@ -1,0 +1,25 @@
+{
+  "name": "photo-to-sim",
+  "version": "1.0.0",
+  "description": "",
+  "main": "validate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "node generate.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlb8dh8-tech/photo-to-sim.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jlb8dh8-tech/photo-to-sim/issues"
+  },
+  "homepage": "https://github.com/jlb8dh8-tech/photo-to-sim#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1"
+  }
+}
