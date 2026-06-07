@@ -1,0 +1,131 @@
+{
+  "$schema": "https://blckunicrn.com/schemas/sim-template/v1",
+  "templateId": "circor-loto",
+  "version": "1.0.0",
+  "description": "Lockout/Tagout safety simulation template for industrial equipment maintenance",
+
+  "schema": {
+    "meta": {
+      "clientId":         { "type": "string", "required": true,  "description": "Unique client identifier, used as localStorage key prefix and webhook tag" },
+      "pilotName":        { "type": "string", "required": true,  "description": "Display name for the pilot program" },
+      "eyebrow":          { "type": "string", "required": true,  "description": "Short category label shown above the training title" },
+      "trainingTitle":    { "type": "string", "required": true,  "description": "Primary training module title" },
+      "welcomeTitle":     { "type": "string", "required": true,  "description": "Hero headline on the login screen" },
+      "welcomeSubtitle":  { "type": "string", "required": true,  "description": "Supporting copy on the login screen, describing the audience and purpose" },
+      "siteLabel":        { "type": "string", "required": true,  "description": "Physical site or facility name shown in the sim summary bar" },
+      "pilotWeekLabel":   { "type": "string", "required": true,  "description": "Pilot week indicator shown in the sim summary bar" }
+    },
+
+    "delivery": {
+      "webhookUrl":   { "type": "string", "required": true,  "description": "Google Sheets Apps Script URL to POST completion data" },
+      "storageKey":   { "type": "string", "required": true,  "description": "localStorage key for persisting trainee records in-browser" },
+      "languages":    { "type": "array",  "required": true,  "items": { "enum": ["en", "es", "fr", "pt"] }, "description": "Supported language codes for this instance" }
+    },
+
+    "roles": {
+      "type": "array",
+      "required": true,
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Role options shown in the login dropdown"
+    },
+
+    "modules": {
+      "type": "array",
+      "required": true,
+      "items": {
+        "num":      { "type": "string", "description": "Zero-padded module number, e.g. '01'" },
+        "title":    { "type": "string", "description": "Module display name" },
+        "status":   { "enum": ["ready", "locked"], "description": "Whether the module is accessible on login" },
+        "lockMsg":  { "type": "string", "required": false, "description": "Message shown when status is locked" }
+      }
+    },
+
+    "questions": {
+      "type": "object",
+      "required": true,
+      "description": "Question bank keyed by language code",
+      "valueSchema": {
+        "type": "array",
+        "items": {
+          "num":  { "type": "string", "description": "Display label, e.g. 'Q1 of 2'" },
+          "text": { "type": "string", "description": "Full scenario description shown to trainee" },
+          "sub":  { "type": "string", "description": "Short topic label shown under the question text" },
+          "answers": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "key":     { "type": "string", "description": "Single letter key: A, B, C, D..." },
+              "text":    { "type": "string", "description": "Answer option text" },
+              "correct": { "type": "boolean", "description": "Exactly one answer per question must be true" },
+              "fb":      { "type": "string", "description": "Feedback shown after selection — explain why right or wrong" }
+            }
+          }
+        }
+      }
+    },
+
+    "videos": {
+      "type": "object",
+      "required": true,
+      "description": "Video file paths keyed by language code. Array length must match question count.",
+      "valueSchema": {
+        "type": "array",
+        "items": { "type": "string", "description": "Relative or absolute path to video file" }
+      }
+    },
+
+    "scoring": {
+      "totalQuestions": { "type": "integer", "required": true,  "description": "Must match the length of each questions[lang] array" },
+      "passThreshold":  { "type": "integer", "required": true,  "description": "Minimum correct answers to pass. Must be <= totalQuestions" }
+    },
+
+    "roleMessages": {
+      "type": "object",
+      "required": true,
+      "description": "Personalized result messages keyed by language → role",
+      "valueSchema": {
+        "type": "object",
+        "description": "Keys are role strings matching the roles array",
+        "itemSchema": {
+          "pass": { "type": "string", "description": "Message shown when trainee passes" },
+          "fail": { "type": "string", "description": "Message shown when trainee fails" }
+        }
+      }
+    },
+
+    "admin": {
+      "dashboardTitle":       { "type": "string", "required": true },
+      "context":              { "type": "string", "required": true,  "description": "Subtitle shown in admin header — equipment type, languages, data mode" },
+      "pilotBadge":           { "type": "string", "required": true,  "description": "Status badge shown top-right of admin dashboard" },
+      "placeholderCompleted": { "type": "integer","required": true,  "description": "Seed number for completed count before real data arrives" },
+      "placeholderTotal":     { "type": "integer","required": true,  "description": "Total worker count for completion rate denominator" },
+      "hazards": {
+        "type": "array",
+        "required": true,
+        "description": "Most-missed hazard list for the admin dashboard",
+        "items": {
+          "name":  { "type": "string" },
+          "pct":   { "type": "integer", "description": "Miss rate percentage 0-100" },
+          "level": { "enum": ["red", "amber", "green"] }
+        }
+      },
+      "chart": {
+        "labels":  { "type": "array", "items": { "type": "string" }, "description": "One label per question for the pass/fail chart" },
+        "failPct": { "type": "array", "items": { "type": "integer" }, "description": "Fail percentage per question — must match labels length" },
+        "passPct": { "type": "array", "items": { "type": "integer" }, "description": "Pass percentage per question — failPct[i] + passPct[i] should equal 100" }
+      }
+    }
+  },
+
+  "validationRules": [
+    "scoring.totalQuestions must equal questions[lang].length for all languages",
+    "scoring.passThreshold must be <= scoring.totalQuestions",
+    "videos[lang].length must equal scoring.totalQuestions for all languages",
+    "Each question must have exactly one answer where correct === true",
+    "roleMessages must contain a key for every role in the roles array",
+    "admin.chart.labels.length must equal scoring.totalQuestions",
+    "admin.chart.failPct[i] + admin.chart.passPct[i] should equal 100 for all i"
+  ]
+}
