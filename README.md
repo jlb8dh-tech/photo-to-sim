@@ -23,7 +23,7 @@ An EHS leader uploads a photo of their facility and gets a custom, branded safet
 
 | Person | Team | Owns | This week's job |
 |--------|------|------|-----------------|
-| **Catherine** | Infrastructure | Template engine, schema, validator, renderer | Finalize `template.json` / `instance.json` contract; render an AI-generated instance |
+| **Katherine** | Infrastructure | Template engine, schema, validator, renderer | Finalize `template.json` / `instance.json` contract; render an AI-generated instance |
 | **Monica** | Infrastructure | Supabase, auth, data storage, admin/analytics dashboard | Stand up company Supabase; design `submissions` table |
 | **Wenxi** | Workflow | Photo upload (mobile-first), Claude Vision call | Get a photo → Claude → valid scenario JSON working end to end |
 | **Deanna** | Workflow | Scenario → video pipeline (Runway/Seedance + ElevenLabs) | Spec how generated questions become video + voiceover (planning, not build yet) |
@@ -47,4 +47,4 @@ Hosts the Next.js app. Free tier covers our usage, deploy previews on every PR, 
 **Anthropic Claude**\
 Vision API for analyzing uploaded facility photos and generating scenario JSON. Well-documented, high output quality on structured JSON generation, and already in use across the team's workflows.\
 **Why not alternatives**\
-Plain React requires a separate backend for API routes. Express adds infra overhead not needed at this scale. Firebase has more complex pricing and vendor lock-in. GraphQL is unnecessary overhead, REST is fine at this scale.\
+Plain React requires a separate backend for API routes. Express adds infra overhead not needed at this scale. Firebase has more complex pricing and vendor lock-in. GraphQL is unnecessary overhead, REST is fine at this scale.
