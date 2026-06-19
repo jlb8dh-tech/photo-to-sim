@@ -1,0 +1,41 @@
+
+> photo-to-sim-ai-track@0.1.0 inspect
+> node scripts/inspect.mjs /Users/cici/Desktop/system/hazard_hazard_eval/photos/construction-workers-on-scaffolding-wide.jpg
+
+{
+  "photoId": "construction-workers-on-scaffolding-wide",
+  "environment": "Exterior construction site – multi-level tubular scaffolding on building facade",
+  "imageQuality": "clear",
+  "hazards": [
+    {
+      "hazard": "Workers on upper scaffold level appear to lack guardrails or mid-rails on the open outer edge, creating an unprotected fall hazard at significant height",
+      "severity": "critical",
+      "oshaReference": "OSHA 1926 Subpart M - Fall Protection",
+      "confidence": 0.88
+    },
+    {
+      "hazard": "Lower-level workers handling and positioning scaffold tubes without visible fall-arrest equipment; body positioning near open scaffold edge increases fall risk",
+      "severity": "high",
+      "oshaReference": "OSHA 1926 Subpart L - Scaffolds",
+      "confidence": 0.82
+    },
+    {
+      "hazard": "Workers on upper level wearing hard hats but fall-arrest harness tie-off anchor points cannot be confirmed, leaving fall-arrest system compliance unverified",
+      "severity": "high",
+      "oshaReference": "OSHA 1926 Subpart M - Fall Protection",
+      "confidence": 0.75
+    },
+    {
+      "hazard": "Scaffold tubes being manually handled and extended outward by lower workers; dropped or shifting tube could strike workers below or on adjacent levels",
+      "severity": "high",
+      "oshaReference": "OSHA 1926 Subpart L - Scaffolds",
+      "confidence": 0.8
+    },
+    {
+      "hazard": "No visible toe boards on scaffold platform edges; tools or materials could fall and strike workers on lower levels",
+      "severity": "medium",
+      "oshaReference": "OSHA 1926 Subpart L - Scaffolds",
+      "confidence": 0.72
+    }
+  ]
+}

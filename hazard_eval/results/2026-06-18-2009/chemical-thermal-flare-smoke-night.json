@@ -1,0 +1,43 @@
+{
+  "photoId": "chemical-thermal-flare-smoke-night",
+  "environment": "Industrial chemical or petroleum refinery, nighttime operation",
+  "imageQuality": "low_visibility",
+  "hazards": [
+    {
+      "hazard": "Large-scale open flaring event with visible flame and dense smoke column",
+      "severity": "critical",
+      "oshaReference": "OSHA General Duty Clause / OSHA 1910.119 - Process Safety Management of Highly Hazardous Chemicals",
+      "confidence": 0.88
+    },
+    {
+      "hazard": "Toxic or hazardous smoke plume rising from facility — possible inhalation hazard for workers in surrounding area; smoke composition cannot be confirmed from image",
+      "severity": "critical",
+      "oshaReference": "OSHA 1910.134 - Respiratory Protection / OSHA General Duty Clause",
+      "confidence": 0.82
+    },
+    {
+      "hazard": "Uncontrolled fire or combustion event at elevated structure — appears to involve active flame at multiple points on tower or stack; ignition source and extent cannot be fully confirmed due to low visibility",
+      "severity": "critical",
+      "oshaReference": "OSHA 1910.155 - Fire Protection / OSHA 1910.119 - PSM",
+      "confidence": 0.85
+    },
+    {
+      "hazard": "Possible pressure release or emergency venting event at flare stack — visible flame intensity and smoke volume suggest abnormal process condition; cannot confirm valve or equipment state from image",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.119 - Process Safety Management of Highly Hazardous Chemicals",
+      "confidence": 0.72
+    },
+    {
+      "hazard": "Nighttime emergency response risk — low ambient visibility may impair worker evacuation, emergency access, and hazard identification around facility structures visible in background",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.37 - Emergency Exit Routes / OSHA General Duty Clause",
+      "confidence": 0.68
+    },
+    {
+      "hazard": "Potential vapor cloud or combustible gas release in proximity to ignition source — multiple lit flare tips visible; plausible risk of flash fire or explosion in surrounding zone; cannot confirm vapor presence from image alone",
+      "severity": "critical",
+      "oshaReference": "OSHA 1910.119 - PSM / NFPA 654 referenced under General Duty Clause",
+      "confidence": 0.65
+    }
+  ]
+}

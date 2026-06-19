@@ -1,0 +1,43 @@
+{
+  "photoId": "manufacturing-conveyor-wide-clean",
+  "environment": "Heavy manufacturing / conveyor facility floor",
+  "imageQuality": "clear",
+  "hazards": [
+    {
+      "hazard": "Corroded and degraded safety railings along pedestrian walkway",
+      "severity": "high",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces (1910.23 - Ladders and Guardrails)",
+      "confidence": 0.88
+    },
+    {
+      "hazard": "Unguarded conveyor system with open accessible sides adjacent to pedestrian walkway",
+      "severity": "high",
+      "oshaReference": "OSHA 1910 Subpart O - Machine Guarding (1910.212)",
+      "confidence": 0.85
+    },
+    {
+      "hazard": "Yellow floor demarcation lines appear faded or partially worn in sections, reducing pedestrian/vehicle traffic boundary visibility",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces (1910.22 - General Requirements)",
+      "confidence": 0.8
+    },
+    {
+      "hazard": "Overhead pipes, conduit, and suspended conveyor infrastructure with no visible clearance markings or impact protection for pedestrians below",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause - Section 5(a)(1)",
+      "confidence": 0.75
+    },
+    {
+      "hazard": "Inclined conveyor structure elevated above floor level with no visible fall protection or guarding at upper transition point",
+      "severity": "high",
+      "oshaReference": "OSHA 1926 Subpart M - Fall Protection / OSHA 1910 Subpart O - Machine Guarding",
+      "confidence": 0.72
+    },
+    {
+      "hazard": "Visible rust and surface deterioration on structural support columns suggesting possible long-term moisture or chemical exposure; structural integrity cannot be confirmed from image",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause - Section 5(a)(1)",
+      "confidence": 0.62
+    }
+  ]
+}

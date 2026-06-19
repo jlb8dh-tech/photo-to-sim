@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-06-19T03:09:40.041Z",
+  "photoCount": 5,
+  "resultDir": "hazard_eval/results/2026-06-18-2009",
+  "results": [
+    {
+      "photo": "hazard_eval/photos/warehouse-blue-forklift-near-shelves.jpg",
+      "status": "NEEDS_ACCURACY_REVIEW",
+      "jsonValid": true,
+      "durationMs": 10692,
+      "output": "hazard_eval/results/2026-06-18-2009/warehouse-blue-forklift-near-shelves.json",
+      "accuracyNotes": "hazard_eval/results/2026-06-18-2009/warehouse-blue-forklift-near-shelves.accuracy.md",
+      "rawOutput": "hazard_eval/results/2026-06-18-2009/warehouse-blue-forklift-near-shelves.raw.txt",
+      "stderr": "hazard_eval/results/2026-06-18-2009/warehouse-blue-forklift-near-shelves.stderr.txt",
+      "error": null
+    },
+    {
+      "photo": "hazard_eval/photos/manufacturing-conveyor-wide-clean.jpg",
+      "status": "NEEDS_ACCURACY_REVIEW",
+      "jsonValid": true,
+      "durationMs": 10749,
+      "output": "hazard_eval/results/2026-06-18-2009/manufacturing-conveyor-wide-clean.json",
+      "accuracyNotes": "hazard_eval/results/2026-06-18-2009/manufacturing-conveyor-wide-clean.accuracy.md",
+      "rawOutput": "hazard_eval/results/2026-06-18-2009/manufacturing-conveyor-wide-clean.raw.txt",
+      "stderr": "hazard_eval/results/2026-06-18-2009/manufacturing-conveyor-wide-clean.stderr.txt",
+      "error": null
+    },
+    {
+      "photo": "hazard_eval/photos/food-bakery-racks-overexposed-blurry.jpg",
+      "status": "NEEDS_ACCURACY_REVIEW",
+      "jsonValid": true,
+      "durationMs": 16079,
+      "output": "hazard_eval/results/2026-06-18-2009/food-bakery-racks-overexposed-blurry.json",
+      "accuracyNotes": "hazard_eval/results/2026-06-18-2009/food-bakery-racks-overexposed-blurry.accuracy.md",
+      "rawOutput": "hazard_eval/results/2026-06-18-2009/food-bakery-racks-overexposed-blurry.raw.txt",
+      "stderr": "hazard_eval/results/2026-06-18-2009/food-bakery-racks-overexposed-blurry.stderr.txt",
+      "error": null
+    },
+    {
+      "photo": "hazard_eval/photos/warehouse-aisle-motion-blur-worker.jpg",
+      "status": "NEEDS_ACCURACY_REVIEW",
+      "jsonValid": true,
+      "durationMs": 13207,
+      "output": "hazard_eval/results/2026-06-18-2009/warehouse-aisle-motion-blur-worker.json",
+      "accuracyNotes": "hazard_eval/results/2026-06-18-2009/warehouse-aisle-motion-blur-worker.accuracy.md",
+      "rawOutput": "hazard_eval/results/2026-06-18-2009/warehouse-aisle-motion-blur-worker.raw.txt",
+      "stderr": "hazard_eval/results/2026-06-18-2009/warehouse-aisle-motion-blur-worker.stderr.txt",
+      "error": null
+    },
+    {
+      "photo": "hazard_eval/photos/chemical-thermal-flare-smoke-night.jpg",
+      "status": "NEEDS_ACCURACY_REVIEW",
+      "jsonValid": true,
+      "durationMs": 12913,
+      "output": "hazard_eval/results/2026-06-18-2009/chemical-thermal-flare-smoke-night.json",
+      "accuracyNotes": "hazard_eval/results/2026-06-18-2009/chemical-thermal-flare-smoke-night.accuracy.md",
+      "rawOutput": "hazard_eval/results/2026-06-18-2009/chemical-thermal-flare-smoke-night.raw.txt",
+      "stderr": "hazard_eval/results/2026-06-18-2009/chemical-thermal-flare-smoke-night.stderr.txt",
+      "error": null
+    }
+  ]
+}

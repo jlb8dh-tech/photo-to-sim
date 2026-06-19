@@ -1,0 +1,53 @@
+
+> photo-to-sim-ai-track@0.1.0 inspect
+> node scripts/inspect.mjs /Users/cici/Desktop/system/hazard_hazard_eval/photos/food-bakery-racks-overexposed-blurry.jpg
+
+{
+  "photoId": "food-bakery-racks-overexposed-blurry",
+  "environment": "Food production / commercial bakery facility",
+  "imageQuality": "blurry",
+  "hazards": [
+    {
+      "hazard": "Possible inadequate personal protective equipment for food production workers",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause / FDA Food Safety Modernization Act cross-reference",
+      "confidence": 0.55,
+      "visibleEvidence": "Two workers appear to be wearing hair coverings but full PPE including gloves, aprons, or face protection cannot be confirmed due to image blur and distance."
+    },
+    {
+      "hazard": "Congested aisle space from mobile rack carts",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.65,
+      "visibleEvidence": "Multiple large wheeled rack carts appear densely packed across the facility floor, possibly reducing clear walking pathways between workstations."
+    },
+    {
+      "hazard": "Possible struck-by or tip-over hazard from tall mobile racking units",
+      "severity": "high",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.6,
+      "visibleEvidence": "Tall multi-tiered wheeled racks appear loaded with product trays throughout the facility; image is blurry so rack stability and load securem ent cannot be confirmed, but tip-over risk is plausible given height and wheel mobility."
+    },
+    {
+      "hazard": "Overexposure or glare from overhead lighting potentially impairing worker visibility",
+      "severity": "low",
+      "oshaReference": "OSHA 1910.303 - Electrical / General Duty Clause",
+      "confidence": 0.5,
+      "visibleEvidence": "Ceiling lighting appears very bright and diffuse, creating overexposed conditions visible in the photo; this may contribute to visual fatigue or reduced hazard visibility for workers operating near moving carts."
+    },
+    {
+      "hazard": "Potential food contact surface contamination risk from floor-level rack storage",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause / FDA 21 CFR Part 117 cross-reference",
+      "confidence": 0.55,
+      "visibleEvidence": "Rack trays on lower shelves appear to be positioned near floor level; in a food production environment this creates plausible contamination exposure, though tray contents and exact clearance cannot be confirmed due to blur."
+    },
+    {
+      "hazard": "Possible ergonomic risk from manual handling of loaded rack trays at height",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause - Ergonomics",
+      "confidence": 0.55,
+      "visibleEvidence": "Racks appear to have multiple tiers with trays loaded to upper shelf levels; workers loading or unloading trays overhead would face plausible awkward posture and overexertion risk, though worker activity cannot be confirmed at this image resolution."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+
+> photo-to-sim-ai-track@0.1.0 inspect
+> node scripts/inspect.mjs /Users/cici/Desktop/system/hazard_hazard_eval/photos/warehouse-aisle-motion-blur-worker.jpg
+
+{
+  "photoId": "warehouse-aisle-motion-blur-worker",
+  "environment": "warehouse storage aisle",
+  "imageQuality": "motion_blur",
+  "hazards": [
+    {
+      "hazard": "Possible pedestrian present in active forklift or powered industrial truck travel aisle; separation between worker and equipment cannot be confirmed due to motion blur",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.178 - Powered Industrial Trucks",
+      "confidence": 0.62
+    },
+    {
+      "hazard": "High-rack shelving units on both sides appear heavily loaded; load stability and securement cannot be confirmed due to image blur, posing possible falling object risk to workers in aisle",
+      "severity": "high",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.6
+    },
+    {
+      "hazard": "Narrow aisle with tall shelving on both sides appears to limit egress and emergency exit options; aisle width relative to equipment clearance cannot be confirmed",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.55
+    },
+    {
+      "hazard": "Bright overexposed light source at aisle end may create visibility impairment for workers or equipment operators traveling toward it, increasing collision risk",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910.303 - General Electrical / OSHA General Duty Clause",
+      "confidence": 0.52
+    }
+  ]
+}

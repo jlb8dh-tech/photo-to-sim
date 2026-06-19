@@ -1,0 +1,47 @@
+
+> photo-to-sim-ai-track@0.1.0 inspect
+> node scripts/inspect.mjs /Users/cici/Desktop/system/hazard_hazard_eval/photos/warehouse-aisle-motion-blur-worker.jpg
+
+{
+  "photoId": "warehouse-aisle-motion-blur-worker",
+  "environment": "warehouse storage aisle",
+  "imageQuality": "motion_blur",
+  "hazards": [
+    {
+      "hazard": "Possible unsecured or overloaded high-rack storage — stacked items on elevated shelving appear dense and tall; load condition and securing method cannot be confirmed due to motion blur",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.176 - Materials Handling and Storage",
+      "confidence": 0.55
+    },
+    {
+      "hazard": "Narrow aisle with apparent worker or equipment present mid-aisle — possible struck-by or caught-between hazard if powered industrial trucks or manual carts operate in same lane",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.178 - Powered Industrial Trucks",
+      "confidence": 0.5
+    },
+    {
+      "hazard": "Apparent walking-working surface in active aisle — floor condition (debris, spills, obstructions) cannot be confirmed due to motion blur and overexposed floor area",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.45
+    },
+    {
+      "hazard": "Possible inadequate aisle width — shelving units on both sides appear to leave limited clearance; whether minimum 3-foot aisle width is maintained cannot be confirmed from this image",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910.176(a) - Materials Handling and Storage",
+      "confidence": 0.5
+    },
+    {
+      "hazard": "Overhead falling object risk — items stored at height on open shelving; no visible rack guards, safety bars, or load containment measures can be confirmed in motion-blurred image",
+      "severity": "high",
+      "oshaReference": "OSHA General Duty Clause - Section 5(a)(1)",
+      "confidence": 0.52
+    },
+    {
+      "hazard": "Visibility and lighting concern — bright overexposed area at aisle end suggests possible glare or uneven lighting condition that could obscure hazards or oncoming traffic for workers in the aisle",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910.303 - Electrical / General Duty Clause (illumination)",
+      "confidence": 0.48
+    }
+  ]
+}

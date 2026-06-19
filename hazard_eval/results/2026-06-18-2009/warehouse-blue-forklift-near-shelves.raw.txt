@@ -1,0 +1,47 @@
+
+> photo-to-sim-ai-track@0.1.0 inspect
+> node scripts/inspect.mjs /Users/cici/Desktop/system/hazard_hazard_eval/photos/warehouse-blue-forklift-near-shelves.jpg
+
+{
+  "photoId": "warehouse-blue-forklift-near-shelves",
+  "environment": "Industrial warehouse with powered industrial truck",
+  "imageQuality": "clear",
+  "hazards": [
+    {
+      "hazard": "Forklift forks lowered and extending unsecured into open floor walking area, creating a struck-by and trip hazard for pedestrians",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.178 - Powered Industrial Trucks",
+      "confidence": 0.95
+    },
+    {
+      "hazard": "No visible operator present on forklift, suggesting unattended powered industrial truck with forks in travel position on warehouse floor",
+      "severity": "high",
+      "oshaReference": "OSHA 1910.178 - Powered Industrial Trucks",
+      "confidence": 0.88
+    },
+    {
+      "hazard": "No visible pedestrian walkway markings or barriers separating forklift operating area from general warehouse floor, increasing struck-by risk",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.82
+    },
+    {
+      "hazard": "Background shelving units appear to hold dense, heavy, and irregularly stacked materials; load stability and rack securement cannot be fully confirmed from this distance",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.65
+    },
+    {
+      "hazard": "Visible wear, rust, and surface degradation on forklift forks and mast carriage, which may indicate deferred inspection or maintenance of load-bearing components",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910.178 - Powered Industrial Trucks",
+      "confidence": 0.78
+    },
+    {
+      "hazard": "Concrete floor shows visible debris and staining near forklift travel path, presenting a slip and trip hazard in an active vehicle zone",
+      "severity": "low",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.8
+    }
+  ]
+}

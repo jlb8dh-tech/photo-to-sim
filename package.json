@@ -1,0 +1,15 @@
+{
+  "name": "photo-to-sim-ai-track",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "inspect": "node scripts/inspect.mjs",
+    "inspect:batch": "node scripts/inspect-batch.mjs",
+    "eval": "node scripts/eval.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1"
+  }
+}

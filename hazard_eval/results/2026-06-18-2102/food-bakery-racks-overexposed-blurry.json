@@ -1,0 +1,37 @@
+{
+  "photoId": "food-bakery-racks-overexposed-blurry",
+  "environment": "Food production or commercial bakery facility",
+  "imageQuality": "blurry",
+  "hazards": [
+    {
+      "hazard": "Possible pedestrian exposure to mobile rack/cart traffic in shared floor space; worker-equipment interaction zones cannot be confirmed due to image blur",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.62
+    },
+    {
+      "hazard": "Appears to show multiple wheeled racks positioned in open floor areas with no visible aisle demarcation; pedestrian pathway separation cannot be confirmed",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.6
+    },
+    {
+      "hazard": "Workers visible in background appear to be wearing head coverings consistent with food safety PPE, but whether full required PPE is worn cannot be confirmed from blurry image",
+      "severity": "low",
+      "oshaReference": "OSHA 1910 Subpart I - Personal Protective Equipment",
+      "confidence": 0.52
+    },
+    {
+      "hazard": "Dense rack storage with possibly loaded shelves throughout the facility floor; rack stability and load security cannot be assessed due to image quality",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.58
+    },
+    {
+      "hazard": "Overexposed and bright overhead lighting may create glare conditions that reduce worker visibility of moving equipment or floor hazards",
+      "severity": "low",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.55
+    }
+  ]
+}

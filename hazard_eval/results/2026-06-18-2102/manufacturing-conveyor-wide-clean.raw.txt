@@ -1,0 +1,41 @@
+
+> photo-to-sim-ai-track@0.1.0 inspect
+> node scripts/inspect.mjs /Users/cici/Desktop/system/hazard_hazard_eval/photos/manufacturing-conveyor-wide-clean.jpg
+
+{
+  "photoId": "manufacturing-conveyor-wide-clean",
+  "environment": "Manufacturing facility floor with pedestrian walkway and conveyor systems",
+  "imageQuality": "clear",
+  "hazards": [
+    {
+      "hazard": "Pedestrian walkway runs immediately adjacent to active conveyor and machinery with only a low railing as separation, creating potential struck-by or entanglement risk at the boundary",
+      "severity": "high",
+      "oshaReference": "OSHA 1910 Subpart O - Machine Guarding",
+      "confidence": 0.82
+    },
+    {
+      "hazard": "Inclined conveyor structure on the right side appears to lack visible full guarding along its sides and underside, exposing workers passing below or alongside to potential nip-point or falling-material hazards",
+      "severity": "high",
+      "oshaReference": "OSHA 1910 Subpart O - Machine Guarding",
+      "confidence": 0.75
+    },
+    {
+      "hazard": "Yellow floor lane markings define the pedestrian corridor but the railing bordering the walkway is visibly corroded and rusted, raising concern about structural integrity as a fall or barrier protection device",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart D - Walking-Working Surfaces",
+      "confidence": 0.85
+    },
+    {
+      "hazard": "Overhead piping, conduit, and suspended cable runs above the pedestrian walkway; no visible clearance signage and condition of attachments cannot be fully confirmed from this distance",
+      "severity": "medium",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.68
+    },
+    {
+      "hazard": "Narrow pedestrian corridor between structural columns and conveyor railing may restrict emergency egress and two-way pedestrian or equipment traffic, increasing collision risk in a high-activity zone",
+      "severity": "medium",
+      "oshaReference": "OSHA 1910 Subpart E - Exit Routes",
+      "confidence": 0.72
+    }
+  ]
+}

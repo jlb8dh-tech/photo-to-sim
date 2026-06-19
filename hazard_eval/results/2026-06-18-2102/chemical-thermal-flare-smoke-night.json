@@ -1,0 +1,37 @@
+{
+  "photoId": "chemical-thermal-flare-smoke-night",
+  "environment": "Industrial chemical or petroleum refinery facility, nighttime exterior",
+  "imageQuality": "low_visibility",
+  "hazards": [
+    {
+      "hazard": "Active large-scale fire or uncontrolled flare event visible on process tower — appears to be an emergency combustion condition with open flame and heavy smoke column",
+      "severity": "critical",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.85
+    },
+    {
+      "hazard": "Dense smoke plume rising from facility — possible toxic or hazardous combustion byproducts; worker inhalation risk cannot be confirmed from image but is strongly plausible",
+      "severity": "critical",
+      "oshaReference": "OSHA 1910.1000 - Air Contaminants",
+      "confidence": 0.78
+    },
+    {
+      "hazard": "Possible uncontrolled release of flammable or hazardous process material at elevated structure — chemical identity and release volume cannot be confirmed from image",
+      "severity": "critical",
+      "oshaReference": "OSHA 1910.119 - Process Safety Management of Highly Hazardous Chemicals",
+      "confidence": 0.75
+    },
+    {
+      "hazard": "Elevated process structures with apparent active fire condition — emergency egress and evacuation route integrity for site workers cannot be confirmed from image",
+      "severity": "high",
+      "oshaReference": "OSHA 1910 Subpart E - Exit Routes and Emergency Planning",
+      "confidence": 0.65
+    },
+    {
+      "hazard": "Multiple tall vertical process columns visible in proximity to fire event — structural integrity and cascading failure risk plausible but cannot be confirmed from image",
+      "severity": "high",
+      "oshaReference": "OSHA General Duty Clause",
+      "confidence": 0.6
+    }
+  ]
+}
