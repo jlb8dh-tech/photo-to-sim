@@ -1,14 +1,17 @@
 {
-  "name": "nextjs-temp",
-  "version": "0.1.0",
+  "name": "photo-to-sim",
+  "version": "1.0.0",
   "private": true,
+  "description": "BLCK UNICRN Photo-to-Sim: facility photo → Claude vision → safety training scenario + quiz",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate": "node validate.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
     "next": "16.2.7",
