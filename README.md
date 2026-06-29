@@ -19,8 +19,15 @@ given the template schema and must emit an instance that drops straight into you
 and survives the validator.
 
 **ElevenLabs voiceover** is wired in: when `ELEVENLABS_API_KEY` is set, each scenario gets a
-**Play scenario** button that streams TTS audio. Without the key, the buttons are hidden and
-the rest of the app works unchanged. Runway video remains deferred (see *Next phases*).
+**Play scenario** button that streams TTS audio.
+
+**Runway video** is wired in too: with `RUNWAY_API_KEY` set, **Generate video** turns the
+uploaded photo into a short cinematic clip (gen4_turbo). It uses a *start + client-poll*
+design — `/api/video/start` kicks off the task and returns immediately, then the browser polls
+`/api/video/[id]` — so no request approaches the serverless timeout and no job queue is needed.
+
+Both audio and video degrade gracefully: without the key, audio buttons hide and the video
+panel shows a mock preview; everything else works unchanged.
 
 ## Run locally
 
@@ -42,6 +49,8 @@ photos. If live generation errors, the API falls back to the sample instead of h
 | `ANTHROPIC_MODEL` | Optional model override. |
 | `ELEVENLABS_API_KEY` | Enables the "Play scenario" voiceover buttons. |
 | `ELEVENLABS_VOICE_ID` / `ELEVENLABS_MODEL` | Optional voice/model overrides. |
+| `RUNWAY_API_KEY` | Enables "Generate video" (image-to-video). Unset → mock preview. |
+| `RUNWAY_MODEL` / `RUNWAY_API_VERSION` / `RUNWAY_RATIO` | Optional Runway overrides. |
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase auth (login/signup). |
 
 ## Project layout
@@ -53,6 +62,8 @@ app/
   login/ signup/ auth/callback/  Supabase email/password auth
   api/generate-training/route.ts Photo → Claude vision → validated instance JSON
   api/voiceover/route.ts         Scenario text → ElevenLabs TTS → audio/mpeg
+  api/video/start/route.ts       Photo → start Runway image-to-video task
+  api/video/[id]/route.ts        Poll a Runway task → status + video URL
 lib/
   buildPrompt.js                 Builds the Claude prompt from template.json
   mockInstance.js                Deterministic sample sim (offline / fallback)
@@ -79,7 +90,7 @@ The UI shows the same pass/warn/error report live, with a **Download instance JS
 3. Push → Vercel builds and deploys. The vision call runs within the serverless timeout —
    no job queue needed for this MVP.
 
-## Next phases (deferred, higher risk)
+## Notes
 
-- **Runway video** — needs verified API format + proper async handling (job queue / webhooks),
-  since video generation exceeds the serverless timeout. Wire this in only after the core is solid.
+- **Runway API version** is pinned via `RUNWAY_API_VERSION` (default `2024-11-06`) and the model
+  via `RUNWAY_MODEL` (default `gen4_turbo`) — bump either with an env var, no code change.

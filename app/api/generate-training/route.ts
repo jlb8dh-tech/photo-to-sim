@@ -38,6 +38,7 @@ export async function POST(req: Request) {
   };
 
   const audioEnabled = !!process.env.ELEVENLABS_API_KEY;
+  const videoEnabled = !!process.env.RUNWAY_API_KEY;
 
   // MOCK mode: no key set, or no photo provided. Lets the demo run end-to-end offline.
   if (!process.env.ANTHROPIC_API_KEY || !photoBase64) {
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
       instance,
       validation,
       audioEnabled,
+      videoEnabled,
     });
   }
 
@@ -77,7 +79,7 @@ export async function POST(req: Request) {
     const instance = extractJson(raw);
     const validation = validateInstance(instance);
 
-    return NextResponse.json({ mode: 'live', model: MODEL, instance, validation, audioEnabled });
+    return NextResponse.json({ mode: 'live', model: MODEL, instance, validation, audioEnabled, videoEnabled });
   } catch (err) {
     console.error('generate-training error:', err);
     // Fall back to a valid sample so the demo never hard-fails in front of an audience.
@@ -89,6 +91,7 @@ export async function POST(req: Request) {
       instance,
       validation,
       audioEnabled,
+      videoEnabled,
     });
   }
 }

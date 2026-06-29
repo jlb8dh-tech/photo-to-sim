@@ -226,6 +226,12 @@ export default function Home() {
               <p className="welcome">{instance.meta?.welcomeSubtitle}</p>
             </div>
 
+            <VideoPanel
+              videoEnabled={result?.videoEnabled}
+              photo={photo}
+              promptText={`Cinematic establishing shot of this facility for a safety briefing — ${instance.meta?.trainingTitle || 'workplace safety'}. Slow camera move, realistic lighting.`}
+            />
+
             {questions.map((q: any, qi: number) => (
               <Question
                 key={qi}
@@ -278,6 +284,122 @@ function ValidationBadge({ result }: { result: any }) {
       {warnings > 0 && <span className="vwarn">{warnings} warning{warnings > 1 ? 's' : ''}</span>}
       {result?.error && <span className="verr">{result.error}</span>}
       {!ok && (v?.errors || []).slice(0, 4).map((e: string, i: number) => <span key={i} className="verr">{e}</span>)}
+    </div>
+  );
+}
+
+function VideoPanel({
+  videoEnabled,
+  photo,
+  promptText,
+}: {
+  videoEnabled?: boolean;
+  photo: Photo | null;
+  promptText: string;
+}) {
+  const [status, setStatus] = useState<'idle' | 'starting' | 'polling' | 'done' | 'failed' | 'mock'>('idle');
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [msg, setMsg] = useState('');
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stop = () => { if (timer.current) { clearInterval(timer.current); timer.current = null; } };
+
+  const poll = (taskId: string) => {
+    let tries = 0;
+    stop();
+    timer.current = setInterval(async () => {
+      tries += 1;
+      if (tries > 45) { // ~3 min ceiling
+        stop();
+        setStatus('failed');
+        setMsg('Timed out waiting for Runway. Try again.');
+        return;
+      }
+      try {
+        const res = await fetch(`/api/video/${taskId}`);
+        const d = await res.json();
+        if (typeof d.progress === 'number') setProgress(Math.round(d.progress * 100));
+        if (d.status === 'SUCCEEDED' && d.videoUrl) {
+          stop();
+          setVideoUrl(d.videoUrl);
+          setStatus('done');
+        } else if (d.status === 'FAILED' || d.error) {
+          stop();
+          setStatus('failed');
+          setMsg(d.error ? String(d.error) : 'Runway reported a failure.');
+        }
+      } catch {
+        // transient — keep polling
+      }
+    }, 4000);
+  };
+
+  const start = async () => {
+    setStatus('starting');
+    setVideoUrl(null);
+    setProgress(0);
+    setMsg('');
+    try {
+      const res = await fetch('/api/video/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photoBase64: photo?.base64, mediaType: photo?.mediaType, promptText }),
+      });
+      const d = await res.json();
+      if (d.mode === 'mock') { setStatus('mock'); return; }
+      if (!res.ok || !d.taskId) { setStatus('failed'); setMsg(d.error || 'Could not start video.'); return; }
+      setStatus('polling');
+      poll(d.taskId);
+    } catch (e: any) {
+      setStatus('failed');
+      setMsg(e?.message || 'Could not start video.');
+    }
+  };
+
+  // Without a photo there's nothing to animate (e.g. mock-no-photo run).
+  const noPhoto = !photo;
+
+  return (
+    <div className="vpanel">
+      <div className="vhead">
+        <h3>Scenario video</h3>
+        {videoEnabled && !noPhoto && status !== 'polling' && status !== 'starting' && (
+          <button className="vbtn" onClick={start} type="button">
+            {status === 'done' ? '↻ Regenerate' : '▶ Generate video (Runway)'}
+          </button>
+        )}
+      </div>
+
+      {noPhoto && <p className="vnote">Upload a facility photo to generate a scenario video.</p>}
+
+      {!videoEnabled && !noPhoto && status === 'idle' && (
+        <p className="vnote">Set <code>RUNWAY_API_KEY</code> to generate a video from this photo. (Other features are unaffected.)</p>
+      )}
+      {videoEnabled && !noPhoto && status === 'idle' && (
+        <p className="vnote">Generate a short cinematic clip from the uploaded photo with Runway gen4_turbo.</p>
+      )}
+
+      {(status === 'starting' || status === 'polling') && (
+        <div className="vprog">
+          <div className="spinner" />
+          <span>{status === 'starting' ? 'Starting Runway task…' : `Rendering video… ${progress ? progress + '%' : ''}`}</span>
+        </div>
+      )}
+
+      {status === 'mock' && (
+        <div className="vmock">
+          <strong>Mock preview</strong>
+          <span>Video generation runs live once <code>RUNWAY_API_KEY</code> is set. The prompt that would be sent:</span>
+          <em>{promptText}</em>
+        </div>
+      )}
+
+      {status === 'failed' && <p className="verr">⚠ {msg}</p>}
+
+      {status === 'done' && videoUrl && (
+        <video className="vvideo" src={videoUrl} controls autoPlay loop muted />
+      )}
     </div>
   );
 }
@@ -450,6 +572,20 @@ function Styles() {
       .fb { margin-top: 12px; padding: 13px 15px; border-radius: 11px; font-size: 14px; line-height: 1.5; }
       .fb.good { background: #0c2018; color: #b7f0d3; }
       .fb.bad { background: #221013; color: #f3c4cb; }
+      .vpanel { border-top: 1px solid #1f1f30; padding-top: 22px; margin-bottom: 8px; }
+      .vhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      .vhead h3 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #8b90a8; margin: 0; }
+      .vbtn { background: #15102270; border: 1px solid #3a2a55; color: #c9b8f0; padding: 9px 15px; border-radius: 999px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; }
+      .vbtn:hover { border-color: #a78bfa; color: #e9e9f2; }
+      .vnote { color: #8b90a8; font-size: 14px; margin: 12px 0 0; }
+      .vprog { display: flex; align-items: center; gap: 12px; margin-top: 16px; color: #c7c9d9; font-size: 14px; }
+      .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #2a2a40; border-top-color: #67e8f9; animation: spin 0.8s linear infinite; flex: none; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .vmock { display: grid; gap: 6px; margin-top: 14px; padding: 14px 16px; border: 1px dashed #34344d; border-radius: 12px; background: #0a0a12; }
+      .vmock strong { color: #c9b8f0; font-size: 14px; }
+      .vmock span { color: #8b90a8; font-size: 13px; }
+      .vmock em { color: #b9bdd0; font-size: 13px; }
+      .vvideo { width: 100%; border-radius: 12px; margin-top: 16px; background: #000; }
       .hazards { border-top: 1px solid #1f1f30; padding-top: 22px; margin-top: 8px; }
       .hazards h3 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #8b90a8; }
       .haz { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #14141f; }
