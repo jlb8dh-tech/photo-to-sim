@@ -222,7 +222,15 @@ export default function Home() {
             </div>
 
             {questions.map((q, qi) => (
-              <Question key={qi} q={q} qi={qi} pick={picks[qi]} onPick={(k) => setPicks((p) => ({ ...p, [qi]: k }))} />
+              <Question
+                key={qi}
+                q={q}
+                qi={qi}
+                pick={picks[qi]}
+                onPick={(k) => setPicks((p) => ({ ...p, [qi]: k }))}
+                audioEnabled={result?.audioEnabled}
+                lang={activeLang}
+              />
             ))}
 
             <div className="hazards">
@@ -269,12 +277,53 @@ function ValidationBadge({ result }) {
   );
 }
 
-function Question({ q, qi, pick, onPick }) {
+function Question({ q, qi, pick, onPick, audioEnabled, lang }) {
   const answered = pick != null;
+  const [audioState, setAudioState] = useState('idle'); // idle | loading | playing | error
+  const audioRef = useRef(null);
+
+  const playScenario = async () => {
+    if (audioState === 'playing' && audioRef.current) {
+      audioRef.current.pause();
+      setAudioState('idle');
+      return;
+    }
+    setAudioState('loading');
+    try {
+      const res = await fetch('/api/voiceover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: q.text, language: lang }),
+      });
+      if (!res.ok) throw new Error('tts');
+      const url = URL.createObjectURL(await res.blob());
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => { setAudioState('idle'); URL.revokeObjectURL(url); };
+      audio.onerror = () => setAudioState('error');
+      await audio.play();
+      setAudioState('playing');
+    } catch {
+      setAudioState('error');
+    }
+  };
+
+  const audioLabel = {
+    idle: '▶ Play scenario',
+    loading: '… generating audio',
+    playing: '❚❚ Stop',
+    error: '⚠ Audio failed — retry',
+  }[audioState];
+
   return (
     <div className="q">
       <div className="qnum">{q.num}</div>
       <p className="qtext">{q.text}</p>
+      {audioEnabled && (
+        <button className={'play' + (audioState === 'playing' ? ' on' : '')} onClick={playScenario} disabled={audioState === 'loading'} type="button">
+          {audioLabel}
+        </button>
+      )}
       {q.sub && <div className="qsub">{q.sub}</div>}
       <div className="answers">
         {q.answers.map((a) => {
@@ -359,6 +408,10 @@ function Styles() {
       .qnum { color: #67e8f9; font-weight: 800; letter-spacing: .1em; font-size: 12px; text-transform: uppercase; }
       .qtext { font-size: 17px; line-height: 1.5; margin: 8px 0; }
       .qsub { color: #8b90a8; font-size: 13px; margin-bottom: 14px; font-style: italic; }
+      .play { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 12px; background: #15102270; border: 1px solid #3a2a55; color: #c9b8f0; padding: 7px 13px; border-radius: 999px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600; }
+      .play:hover:not(:disabled) { border-color: #a78bfa; color: #e9e9f2; }
+      .play.on { background: linear-gradient(100deg, #a78bfa, #67e8f9); color: #07070c; border-color: transparent; }
+      .play:disabled { opacity: .7; cursor: default; }
       .answers { display: grid; gap: 10px; }
       .ans { display: flex; gap: 12px; align-items: flex-start; text-align: left; background: #0a0a12; border: 1px solid #24243a; color: #dcdef0; padding: 13px 15px; border-radius: 11px; cursor: pointer; font-family: inherit; font-size: 14px; line-height: 1.45; }
       .ans:hover:not(:disabled) { border-color: #a78bfa; }

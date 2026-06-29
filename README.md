@@ -16,8 +16,9 @@ The key design choice: the existing `template.json` **is** the output contract. 
 given the template schema and must emit an instance that drops straight into your real sim
 and survives the validator. No bespoke demo format.
 
-This is the **Claude-vision MVP** described in the project notes — the lowest-risk slice.
-ElevenLabs voiceover and Runway video are intentionally deferred (see *Next phases*).
+**ElevenLabs voiceover** is wired in: when `ELEVENLABS_API_KEY` is set, each scenario gets a
+**Play scenario** button that streams TTS audio. Without the key, the buttons are hidden and
+the rest of the app works unchanged. Runway video remains deferred (see *Next phases*).
 
 ## Run locally
 
@@ -39,6 +40,7 @@ instance rather than hard-failing — useful in front of an audience.
 pages/
   index.js                  Upload UI + interactive sim renderer (BLCK UNICRN theme)
   api/generate-training.js  Photo → Claude vision → validated instance JSON
+  api/voiceover.js          Scenario text → ElevenLabs TTS → audio/mpeg
 lib/
   buildPrompt.js            Builds the Claude prompt from template.json
   mockInstance.js           Deterministic sample sim (offline / fallback)
@@ -71,6 +73,5 @@ no job queue needed for this MVP.
 
 ## Next phases (deferred, higher risk)
 
-- **ElevenLabs voiceover** — TTS over each scenario; add an audio player to the UI.
 - **Runway video** — needs verified API format + proper async handling (job queue / webhooks),
   since video generation exceeds the serverless timeout. Wire this in only after the core is solid.
