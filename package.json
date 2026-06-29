@@ -1,0 +1,18 @@
+{
+  "name": "photo-to-sim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BLCK UNICRN Photo-to-Sim: facility photo → Claude vision → safety training scenario + quiz",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "validate": "node validate.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
