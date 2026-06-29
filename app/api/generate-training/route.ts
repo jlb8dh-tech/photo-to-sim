@@ -1,16 +1,15 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { buildPrompt } from '../../lib/buildPrompt';
-import { buildMockInstance } from '../../lib/mockInstance';
-import { validateInstance } from '../../lib/validateInstance';
+import { NextResponse } from 'next/server';
+import { buildPrompt } from '@/lib/buildPrompt';
+import { buildMockInstance } from '@/lib/mockInstance';
+import { validateInstance } from '@/lib/validateInstance';
 
-// Base64 photos are large — raise the body limit. Frontend also downscales first.
-export const config = {
-  api: { bodyParser: { sizeLimit: '12mb' } },
-};
+// The vision call can take a while; allow up to 60s on Vercel.
+export const maxDuration = 60;
 
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-4-8';
 
-function extractJson(text) {
+function extractJson(text: string) {
   // Claude is told to return only JSON, but strip fences / surrounding prose defensively.
   let t = text.trim();
   const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
@@ -22,19 +21,15 @@ function extractJson(text) {
   throw new Error('No JSON object found in model response');
 }
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+export async function POST(req: Request) {
+  const body = await req.json().catch(() => ({}));
   const {
     photoBase64,
     mediaType = 'image/jpeg',
     languages = ['en'],
     totalQuestions = 2,
     clientHint = '',
-  } = req.body || {};
+  } = body || {};
 
   const opts = {
     languages: Array.isArray(languages) && languages.length ? languages : ['en'],
@@ -48,7 +43,7 @@ export default async function handler(req, res) {
   if (!process.env.ANTHROPIC_API_KEY || !photoBase64) {
     const instance = buildMockInstance(opts);
     const validation = validateInstance(instance);
-    return res.status(200).json({
+    return NextResponse.json({
       mode: process.env.ANTHROPIC_API_KEY ? 'mock-no-photo' : 'mock',
       instance,
       validation,
@@ -76,22 +71,21 @@ export default async function handler(req, res) {
     });
 
     const raw = message.content
-      .filter((b) => b.type === 'text')
-      .map((b) => b.text)
+      .map((b) => (b.type === 'text' ? b.text : ''))
       .join('\n');
 
     const instance = extractJson(raw);
     const validation = validateInstance(instance);
 
-    return res.status(200).json({ mode: 'live', model: MODEL, instance, validation, audioEnabled });
+    return NextResponse.json({ mode: 'live', model: MODEL, instance, validation, audioEnabled });
   } catch (err) {
     console.error('generate-training error:', err);
     // Fall back to a valid sample so the demo never hard-fails in front of an audience.
     const instance = buildMockInstance(opts);
     const validation = validateInstance(instance);
-    return res.status(200).json({
+    return NextResponse.json({
       mode: 'error-fallback',
-      error: err.message || String(err),
+      error: err instanceof Error ? err.message : String(err),
       instance,
       validation,
       audioEnabled,

@@ -1,4 +1,8 @@
+'use client';
+
 import { useCallback, useRef, useState } from 'react';
+
+type Photo = { base64: string; dataUrl: string; mediaType: string };
 
 const LANGS = [
   { code: 'en', label: 'English' },
@@ -14,7 +18,7 @@ const STEPS = [
 ];
 
 // Downscale + re-encode in the browser so we never POST a giant base64 blob.
-function fileToBase64(file, maxDim = 1024, quality = 0.82) {
+function fileToBase64(file: File, maxDim = 1024, quality = 0.82): Promise<Photo> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -29,7 +33,7 @@ function fileToBase64(file, maxDim = 1024, quality = 0.82) {
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
-      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
       const dataUrl = canvas.toDataURL('image/jpeg', quality);
       resolve({ base64: dataUrl.split(',')[1], dataUrl, mediaType: 'image/jpeg' });
     };
@@ -39,19 +43,19 @@ function fileToBase64(file, maxDim = 1024, quality = 0.82) {
 }
 
 export default function Home() {
-  const [photo, setPhoto] = useState(null); // { base64, dataUrl, mediaType }
-  const [langs, setLangs] = useState(['en']);
+  const [photo, setPhoto] = useState<Photo | null>(null);
+  const [langs, setLangs] = useState<string[]>(['en']);
   const [numQ, setNumQ] = useState(2);
   const [hint, setHint] = useState('');
   const [busy, setBusy] = useState(false);
   const [step, setStep] = useState(-1);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
-  const [picks, setPicks] = useState({}); // quiz answer selections
-  const fileRef = useRef(null);
+  const [picks, setPicks] = useState<Record<number, string>>({});
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const onFile = useCallback(async (file) => {
+  const onFile = useCallback(async (file?: File | null) => {
     if (!file || !file.type.startsWith('image/')) return;
     setError('');
     try {
@@ -61,7 +65,7 @@ export default function Home() {
     }
   }, []);
 
-  const toggleLang = (code) => {
+  const toggleLang = (code: string) => {
     setLangs((prev) => (prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]));
   };
 
@@ -93,9 +97,9 @@ export default function Home() {
       clearInterval(ticker);
       setStep(STEPS.length);
       setResult(data);
-    } catch (e) {
+    } catch (e: any) {
       clearInterval(ticker);
-      setError('Generation failed: ' + (e.message || e));
+      setError('Generation failed: ' + (e?.message || e));
     } finally {
       setBusy(false);
       setTimeout(() => setStep(-1), 600);
@@ -118,6 +122,7 @@ export default function Home() {
     <>
       <main>
         <header className="hero">
+          <a className="signin" href="/login">Sign in</a>
           <div className="brand">BLCK&nbsp;UNICRN</div>
           <h1>Photo&nbsp;→&nbsp;Sim</h1>
           <p className="tag">
@@ -221,13 +226,12 @@ export default function Home() {
               <p className="welcome">{instance.meta?.welcomeSubtitle}</p>
             </div>
 
-            {questions.map((q, qi) => (
+            {questions.map((q: any, qi: number) => (
               <Question
                 key={qi}
                 q={q}
-                qi={qi}
                 pick={picks[qi]}
-                onPick={(k) => setPicks((p) => ({ ...p, [qi]: k }))}
+                onPick={(k: string) => setPicks((p) => ({ ...p, [qi]: k }))}
                 audioEnabled={result?.audioEnabled}
                 lang={activeLang}
               />
@@ -235,7 +239,7 @@ export default function Home() {
 
             <div className="hazards">
               <h3>Most-missed hazards</h3>
-              {(instance.admin?.hazards || []).map((h, i) => (
+              {(instance.admin?.hazards || []).map((h: any, i: number) => (
                 <div className="haz" key={i}>
                   <span className={'lvl ' + h.level} />
                   <span className="hname">{h.name}</span>
@@ -256,31 +260,44 @@ export default function Home() {
   );
 }
 
-function ValidationBadge({ result }) {
+function ValidationBadge({ result }: { result: any }) {
   const v = result?.validation;
   const ok = v?.ok;
   const warnings = v?.warnings?.length || 0;
-  const modeLabel = {
-    live: 'Live · Claude vision',
-    mock: 'Sample output (no API key set)',
-    'mock-no-photo': 'Sample output (no photo)',
-    'error-fallback': 'Fallback sample (generation error)',
-  }[result?.mode] || result?.mode;
+  const modeLabel =
+    ({
+      live: 'Live · Claude vision',
+      mock: 'Sample output (no API key set)',
+      'mock-no-photo': 'Sample output (no photo)',
+      'error-fallback': 'Fallback sample (generation error)',
+    } as Record<string, string>)[result?.mode] || result?.mode;
   return (
     <div className={'vbadge ' + (ok ? 'pass' : 'failv')}>
       <strong>{ok ? '✓ Valid against template' : '✗ Validation errors'}</strong>
       <span className="vmode">{modeLabel}{result?.model ? ` · ${result.model}` : ''}</span>
       {warnings > 0 && <span className="vwarn">{warnings} warning{warnings > 1 ? 's' : ''}</span>}
       {result?.error && <span className="verr">{result.error}</span>}
-      {!ok && (v?.errors || []).slice(0, 4).map((e, i) => <span key={i} className="verr">{e}</span>)}
+      {!ok && (v?.errors || []).slice(0, 4).map((e: string, i: number) => <span key={i} className="verr">{e}</span>)}
     </div>
   );
 }
 
-function Question({ q, qi, pick, onPick, audioEnabled, lang }) {
+function Question({
+  q,
+  pick,
+  onPick,
+  audioEnabled,
+  lang,
+}: {
+  q: any;
+  pick?: string;
+  onPick: (k: string) => void;
+  audioEnabled?: boolean;
+  lang: string;
+}) {
   const answered = pick != null;
-  const [audioState, setAudioState] = useState('idle'); // idle | loading | playing | error
-  const audioRef = useRef(null);
+  const [audioState, setAudioState] = useState<'idle' | 'loading' | 'playing' | 'error'>('idle');
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const playScenario = async () => {
     if (audioState === 'playing' && audioRef.current) {
@@ -320,13 +337,18 @@ function Question({ q, qi, pick, onPick, audioEnabled, lang }) {
       <div className="qnum">{q.num}</div>
       <p className="qtext">{q.text}</p>
       {audioEnabled && (
-        <button className={'play' + (audioState === 'playing' ? ' on' : '')} onClick={playScenario} disabled={audioState === 'loading'} type="button">
+        <button
+          className={'play' + (audioState === 'playing' ? ' on' : '')}
+          onClick={playScenario}
+          disabled={audioState === 'loading'}
+          type="button"
+        >
           {audioLabel}
         </button>
       )}
       {q.sub && <div className="qsub">{q.sub}</div>}
       <div className="answers">
-        {q.answers.map((a) => {
+        {q.answers.map((a: any) => {
           const chosen = pick === a.key;
           let cls = 'ans';
           if (answered) {
@@ -344,8 +366,8 @@ function Question({ q, qi, pick, onPick, audioEnabled, lang }) {
         })}
       </div>
       {answered && (
-        <div className={'fb ' + (q.answers.find((a) => a.key === pick)?.correct ? 'good' : 'bad')}>
-          {q.answers.find((a) => a.key === pick)?.fb}
+        <div className={'fb ' + (q.answers.find((a: any) => a.key === pick)?.correct ? 'good' : 'bad')}>
+          {q.answers.find((a: any) => a.key === pick)?.fb}
         </div>
       )}
     </div>
@@ -360,7 +382,9 @@ function Styles() {
       html, body { margin: 0; padding: 0; background: #07070c; color: #e9e9f2; font-family: 'Manrope', system-ui, sans-serif; }
       a, code { color: #67e8f9; }
       main { max-width: 860px; margin: 0 auto; padding: 48px 20px 96px; }
-      .hero { text-align: center; margin-bottom: 36px; }
+      .hero { text-align: center; margin-bottom: 36px; position: relative; }
+      .signin { position: absolute; top: 0; right: 0; font-size: 13px; font-weight: 700; text-decoration: none; color: #9aa0b5; }
+      .signin:hover { color: #67e8f9; }
       .brand { letter-spacing: .35em; font-weight: 800; font-size: 13px; color: #a78bfa; }
       h1 { font-family: 'Bebas Neue', sans-serif; font-size: 76px; line-height: .95; margin: 8px 0 6px;
            background: linear-gradient(100deg, #a78bfa, #67e8f9); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -393,7 +417,7 @@ function Styles() {
       .steps li.done .dot { background: #a78bfa; }
       .err { color: #fca5a5; margin-top: 14px; }
       .vbadge { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 16px; border-radius: 12px; margin-bottom: 22px; font-size: 13px; }
-      .vbadge.pass { background: #0c2018; border: 1px solid #1c5; border-color: #1c5b3f; }
+      .vbadge.pass { background: #0c2018; border: 1px solid #1c5b3f; }
       .vbadge.failv { background: #221013; border: 1px solid #5b1c28; }
       .vbadge strong { font-size: 14px; }
       .vmode { color: #9aa0b5; }
