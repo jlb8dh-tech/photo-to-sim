@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo-to-Sim — BLCK UNICRN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #000;
+      --panel: #0d0d0d;
+      --panel2: #111;
+      --border: #1a1a1a;
+      --border2: #222;
+      --white: #fff;
+      --off: #e8e8e8;
+      --muted: #555;
+      --purple: #a855f7;
+      --cyan: #06b6d4;
+      --green: #1aff7a;
+      --red: #ff4d4d;
+      --grad: linear-gradient(135deg, #a855f7, #7c6dff, #06b6d4);
+      --gtext: linear-gradient(90deg, #c084fc, #818cf8, #22d3ee);
+    }
+    html, body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Manrope', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+    }
+    .logo span {
+      background: var(--gtext);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+    .upload-zone {
+      width: 100%;
+      border: 1.5px dashed var(--border2);
+      background: var(--panel);
+      padding: 40px 32px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+    }
+    .upload-zone:hover, .upload-zone.drag {
+      border-color: var(--purple);
+      background: rgba(168, 85, 247, 0.04);
+    }
+    .upload-zone input[type=file] {
+      display: none;
+    }
+    .uz-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+    .uz-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .uz-sub { font-size: 13px; color: var(--muted); }
+    .uz-sub span { color: var(--purple); font-weight: 600; }
+    .btn-primary {
+      background: var(--grad);
+      color: #fff;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 12px 28px;
+      border: none;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: opacity 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+    
+    .gen-state {
+      display: none;
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .gen-state.active { display: block; }
+    .gen-spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 20px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .gen-headline { font-size: 16px; font-weight: 700; margin-bottom: 24px; }
+    .gen-steps { margin-top: 20px; text-align: left; }
+    .gen-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .gen-step:last-child { border-bottom: none; }
+    .gen-step.done { color: var(--white); }
+    .gen-step.done .step-icon { color: var(--green); }
+    .gen-step.active { color: var(--white); }
+    .gen-step.active .step-icon { color: var(--purple); animation: pulse2 1s infinite; }
+    @keyframes pulse2 { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .step-icon { width: 18px; text-align: center; font-size: 14px; color: #333; }
+    
+    .result-section {
+      display: none;
+      width: 100%;
+    }
+    .result-section.active { display: block; }
+    .result-header {
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      border-bottom: none;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .result-tag { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple); }
+    .result-badge { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 0.06em; text-transform: uppercase; }
+    .result-badge::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+    .result-img { width: 100%; max-height: 220px; object-fit: cover; display: block; border-left: 1px solid var(--border2); border-right: 1px solid var(--border2); }
+    .scenario-card {
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      border-top: none;
+      padding: 24px;
+    }
+    .scenario-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .scenario-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--purple); border-radius: 50%; animation: blink 2s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+    .scenario-q { font-size: 16px; font-weight: 700; line-height: 1.5; margin-bottom: 6px; }
+    .scenario-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+    .ans-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .ans {
+      border: 1px solid var(--border2);
+      padding: 13px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .ans:hover { border-color: var(--purple); }
+    .ans-key { font-size: 13px; font-weight: 700; color: var(--purple); min-width: 24px; }
+    .ans-text { font-size: 13px; color: var(--muted); }
+    .ans.sel-correct { background: rgba(26, 255, 122, 0.1); border-color: var(--green); }
+    .ans.sel-correct .ans-text { color: var(--green); }
+    .ans.sel-wrong { background: rgba(255, 77, 77, 0.1); border-color: var(--red); }
+    .ans.sel-wrong .ans-text { color: var(--red); }
+    .ans.fade { opacity: 0.3; }
+    .feedback-box {
+      display: none;
+      border-left: 4px solid var(--green);
+      background: rgba(26, 255, 122, 0.08);
+      padding: 16px;
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--off);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">BLCK <span>UNICRN</span></div>
+  </nav>
+
+  <div class="main">
+    <div class="upload-zone" id="uploadZone">
+      <div class="uz-icon">📸</div>
+      <div class="uz-title">Drop your facility photo</div>
+      <div class="uz-sub">or <span>click to select</span></div>
+      <button class="btn-primary">Choose File</button>
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <div class="gen-state" id="genState">
+      <div class="gen-spinner"></div>
+      <div class="gen-headline" id="genHeadline">Analyzing your facility...</div>
+      <div class="gen-steps">
+        <div class="gen-step active" id="step1"><span class="step-icon">●</span> Analyzing photo</div>
+        <div class="gen-step" id="step2"><span class="step-icon">●</span> Generating scenario</div>
+        <div class="gen-step" id="step3"><span class="step-icon">●</span> Creating voiceover</div>
+        <div class="gen-step" id="step4"><span class="step-icon">●</span> Rendering video</div>
+      </div>
+    </div>
+
+    <div class="result-section" id="resultSection">
+      <div class="result-header">
+        <div class="result-tag">AI Simulation</div>
+        <div class="result-badge">Ready</div>
+      </div>
+      <img id="resultImg" class="result-img" alt="Facility">
+      <div class="scenario-card">
+        <div class="scenario-eyebrow">Scenario</div>
+        <div class="scenario-q" id="simQuestion"></div>
+        <div class="scenario-sub" id="simSub"></div>
+        <div class="ans-grid" id="answerGrid"></div>
+        <div class="feedback-box" id="feedbackBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const genState = document.getElementById('genState');
+    const resultSection = document.getElementById('resultSection');
+    let uploadedDataUrl = null;
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('drag');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    function handleFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadedDataUrl = e.target.result;
+        uploadZone.style.display = 'none';
+        genState.classList.add('active');
+        generateSim();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    let stepN = 1;
+    const headlines = [
+      'Analyzing your facility...',
+      'Generating scenario...',
+      'Creating voiceover...',
+      'Rendering video...'
+    ];
+
+    async function generateSim() {
+      let interval = setInterval(() => {
+        stepN++;
+        if (stepN <= 4) {
+          activateStep(stepN);
+          document.getElementById('genHeadline').textContent = headlines[stepN - 1];
+        }
+      }, 3000);
+
+      try {
+        const response = await fetch('/api/generate-training', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ photo: uploadedDataUrl })
+        });
+
+        const data = await response.json();
+        clearInterval(interval);
+
+        ['step1', 'step2', 'step3', 'step4'].forEach(id => {
+          document.getElementById(id).classList.add('done');
+          document.getElementById(id).classList.remove('active');
+        });
+
+        pollJob(data.jobId);
+      } catch (err) {
+        clearInterval(interval);
+        console.error(err);
+      }
+    }
+
+    async function pollJob(jobId) {
+      const poll = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/job/${jobId}`);
+          const data = await response.json();
+
+          if (data.status === 'done') {
+            clearInterval(poll);
+            genState.classList.remove('active');
+            resultSection.classList.add('active');
+            document.getElementById('resultImg').src = uploadedDataUrl;
+            document.getElementById('simQuestion').textContent = data.questions?.[0]?.question || 'Safety Scenario';
+            document.getElementById('simSub').textContent = 'AI-Generated Scenario';
+            renderQuiz(data.questions || []);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }, 2000);
+    }
+
+    function renderQuiz(questions) {
+      const grid = document.getElementById('answerGrid');
+      grid.innerHTML = '';
+      const q = questions[0] || {};
+      const options = q.options || ['Option A', 'Option B', 'Option C', 'Option D'];
+      const keys = ['A', 'B', 'C', 'D'];
+      
+      options.forEach((opt, i) => {
+        const div = document.createElement('div');
+        div.className = 'ans';
+        div.innerHTML = `<div class="ans-key">${keys[i]}</div><div class="ans-text">${opt}</div>`;
+        div.onclick = () => selectAnswer(div, i === 0);
+        grid.appendChild(div);
+      });
+    }
+
+    function selectAnswer(el, correct) {
+      const allAns = document.querySelectorAll('.ans');
+      allAns.forEach(a => {
+        a.onclick = null;
+        if (a === el) {
+          a.classList.add(correct ? 'sel-correct' : 'sel-wrong');
+        } else {
+          a.classList.add('fade');
+        }
+      });
+      const fb = document.getElementById('feedbackBox');
+      fb.textContent = correct ? 'Correct answer! Well done.' : 'Incorrect. Review the safety protocol.';
+      fb.style.borderLeftColor = correct ? 'var(--green)' : 'var(--red)';
+      fb.style.display = 'block';
+    }
+
+    function activateStep(n) {
+      ['step1', 'step2', 'step3', 'step4'].forEach(id => {
+        document.getElementById(id).classList.remove('active', 'done');
+      });
+      for (let i = 0; i < n - 1; i++) {
+        document.getElementById(['step1', 'step2', 'step3', 'step4'][i]).classList.add('done');
+      }
+      if (n <= 4) {
+        document.getElementById(['step1', 'step2', 'step3', 'step4'][n - 1]).classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
